@@ -83,8 +83,8 @@ end
         % Get position for first wake to be shed
         Vx = upan(1,1) + upan(end);
         V_end = Vx/2;
-        dt = 0.0001;
-        x_fixed(1) = xnew(end) + V_end*dt;
+        %dt = 0.0001;
+%         x_fixed(1) = xnew(end) + V_end*dt;
         %
         
         z2 = xpmat + 1i*ypmat;
@@ -262,6 +262,7 @@ for jj = 1:length(ztop)
 
                 
                 psiint1_SJ = log(f1).*(SJ + a.*b + c.*d) + f4 -2*SJ  ;
+
                 psiint2_SJ = 1/2*log(f1).*(SJ.^2 - a.^2.*b.^2+a.^2.*d.^2-4*a.*b.*c.*d+b.^2.*c.^2-c.^2.*d.^2) + f3 ...
                      - 1/2*SJ.^2 + a.*b.*SJ + c.*d.*SJ;
                 

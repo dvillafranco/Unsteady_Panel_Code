@@ -4,7 +4,7 @@
 
 % NACA 4 digit series for now 
 
-t = .12;
+t = .01;
 m = .00;
 p = .0;
 % m = .11;
@@ -149,7 +149,7 @@ ynew = yaf2;
 
 %this is a fudge here so that the asymp solver works - it needs airfoil
 %going from 0 to 2 even after it is rotated (I think ) 
-stretchfac = (max(xnew)-min(xnew))/1.0
+stretchfac = (max(xnew)-min(xnew))/1.0;
 xnew = xnew/stretchfac;
 ynew = ynew/stretchfac;
 
@@ -165,6 +165,7 @@ for j = 1: length(xnew) -1;
         thetpan1(j) = atan2(ynew(j+1) - ynew(j), xnew(j+1) - xnew(j));
 end;
 thetpan = unwrap(thetpan1);
+thetpan_af = unwrap(thetpan1);
 figure(3)
 plot(thetpan*180/pi,'+')
 
@@ -175,6 +176,3 @@ xmid = xnew(1:end-1)+ (xnew(2:end) - xnew(1:end-1))/2;
 ymid = ynew(1:end-1)+(ynew(2:end) - ynew(1:end-1))/2;
 
 SJ = sqrt( ( xnew(2:end) - xnew(1:end-1) ).^2 + (ynew(2:end)-ynew(1:end-1)).^2);
-
-
-

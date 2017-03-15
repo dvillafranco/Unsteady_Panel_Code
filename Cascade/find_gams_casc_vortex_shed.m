@@ -1,20 +1,24 @@
 % set up matrix to find unknown gamma values 
 % use casc_tranform.m to get the endpoints, midpoints, and panel angles and
 %   h which is the cascade gap
+clear gamans
 ntz = 1;
-y_fixed(1) = 0;
+x_imp = real(vort_imp_z2);
+y_imp = imag(vort_imp_z2);
+x_fixed = real(vort_wake_z2);
+y_fixed = imag(vort_wake_z2);
 %x_imp(1) = -0.7024;
 %y_imp(1) = 0.1312;
-x_imp(1) = -.5824;
-y_imp(1) = 0.0824;
-z_imp = x_imp(1) + 1i*y_imp(1);
-z2_imp = tanh(pi*z_imp/h);
-x_imp(1) = real(z2_imp);
-y_imp(1) = imag(z2_imp);
+% x_imp(1) = -.5824;
+% y_imp(1) = 0.0824;
+% z_imp = x_imp(1) + 1i*y_imp(1);
+% z2_imp = tanh(pi*z_imp/h);
+% x_imp(1) = real(z2_imp);
+% y_imp(1) = imag(z2_imp);
 
-for nx = 1:220;
+for nx = 1:4000;
 % Define Parameters for Vortex (imposed)
-gam_imp =0.01;
+gam_imp =- 0.02;
 
 
 num = length(xnew);
@@ -85,22 +89,23 @@ gamjmat = [gamj veczero'];
 gamjp1mat = [veczero' gamjp1];
 
 % dphi/dy for imposed vortex
-vor_phi_y = (gam_imp/(2*pi))*((xnew(1:end-1)-x_imp(nx))./((xnew(1:end-1)-x_imp(nx)).^2+(ynew(1:end-1)-y_imp(nx)).^2));
+ vor_phi_y = -(gam_imp/(2*pi))*((xnew(1:end-1)-x_imp(nx))./((xnew(1:end-1)-x_imp(nx)).^2+(ynew(1:end-1)-y_imp(nx)).^2));
+%vor_phi_y = -(gam_imp/(2*pi))*((xmid(1:end)-x_imp(nx))./((xmid(1:end)-x_imp(nx)).^2+(ymid(1:end)-y_imp(nx)).^2));
 
 % dphi/dx for imposed vortex
-vor_phi_x = (gam_imp/(2*pi))*((ynew(1:end-1)-y_imp(nx))./((xnew(1:end-1)-x_imp(nx)).^2+(ynew(1:end-1)-y_imp(nx)).^2));
-
-
+ vor_phi_x = (gam_imp/(2*pi))*((ynew(1:end-1)-y_imp(nx))./((xnew(1:end-1)-x_imp(nx)).^2+(ynew(1:end-1)-y_imp(nx)).^2));
+%vor_phi_x = (gam_imp/(2*pi))*((ymid(1:end)-y_imp(nx))./((xmid(1:end)-x_imp(nx)).^2+(ymid(1:end)-y_imp(nx)).^2));
 
 % dphi/dy for shedded vortex
-vor_phi_yshed = ((1/(2*pi))*((xnew(1:end-1)-x_fixed(1))./((xnew(1:end-1)-x_fixed(1)).^2+(ynew(1:end-1)-y_fixed(1)).^2))).*cos(thetpan);
+vor_phi_yshed = ((-1/(2*pi))*((xnew(1:end-1)-x_fixed(1))./((xnew(1:end-1)-x_fixed(1)).^2+(ynew(1:end-1)-y_fixed(1)).^2))).*cos(thetpan);
+%vor_phi_yshed = ((-1/(2*pi))*((xmid(1:end)-x_fixed(1))./((xmid(1:end)-x_fixed(1)).^2+(ymid(1:end)-y_fixed(1)).^2))).*cos(thetpan);
 
 % dphi/dx for shedded vortex
-vor_phi_xshed = ((1/(2*pi))*((ynew(1:end-1)-y_fixed(1))./((xnew(1:end-1)-x_fixed(1)).^2+(ynew(1:end-1)-y_fixed(1)).^2))).*sin(thetpan);
+vor_phi_xshed = ((-1/(2*pi))*((ynew(1:end-1)-y_fixed(1))./((xnew(1:end-1)-x_fixed(1)).^2+(ynew(1:end-1)-y_fixed(1)).^2))).*sin(thetpan);
+%vor_phi_xshed = ((-1/(2*pi))*((ymid(1:end)-y_fixed(1))./((xmid(1:end)-x_fixed(1)).^2+(ymid(1:end)-y_fixed(1)).^2))).*sin(thetpan);
 
 
-
-mattot = [(gamjmat + gamjp1mat),(-vor_phi_yshed - vor_phi_xshed)'];
+mattot = [(gamjmat + gamjp1mat),(vor_phi_yshed + vor_phi_xshed)'];
 
 % set up right hand side
 
@@ -111,18 +116,18 @@ bot4 = (xmid + 1).^2 + ymid.^2;
 if nx == 1
     rhs1 = delta/2/pi*(  ((xmid+1)./bot4 - (xmid-1)./bot3).*sin(thetpan) + (ymid./bot4 - ymid./bot3).*(-cos(thetpan) )  ) ...
             -  gup /2/pi.*(  (ymid./bot4 - ymid./bot3).*sin(thetpan) + ( - (xmid+1)./bot4  + (xmid-1)./bot3) .*(-cos(thetpan)) )...
-         + vor_phi_x.*sin(thetpan)-  vor_phi_y.*cos(thetpan);   
+         - vor_phi_x.*(-sin(thetpan))-  vor_phi_y.*cos(thetpan);   
 else
     rsh1 = delta/2/pi*(  ((xmid+1)./bot4 - (xmid-1)./bot3).*sin(thetpan) + (ymid./bot4 - ymid./bot3).*(-cos(thetpan) )  ) ...
             -  gup /2/pi.*(  (ymid./bot4 - ymid./bot3).*sin(thetpan) + ( - (xmid+1)./bot4  + (xmid-1)./bot3) .*(-cos(thetpan)) )...
-         + vor_phi_x.*sin(thetpan)-  vor_phi_y.*cos(thetpan) + sum(gam_wake,2)';  
+         - vor_phi_x.*(-sin(thetpan))-  vor_phi_y.*cos(thetpan) - sum(gam_wake,2)';  
 end
 
         
 % add Kutta condition -- last line of matrix and RSH
 lastline = zeros(1,num+1);
-lastline(1) = 1;
-lastline(end-1) = 1;
+lastline(1) = .1;
+lastline(end-1) = .1;
 
 if nx == 1
     rhs =  [rhs1 0 gamans_steady];
@@ -132,7 +137,12 @@ else
 end 
     
 % Kelvin's Theory to keep circulation sum zero
-kelvin = ones(1,num+1);
+kel_first = SJ(1)/2;
+for r = 1:(length(SJ)-1)
+    kel_mid(r) = SJ(r)/2 + SJ(r+1)/2;
+end
+kel_end = SJ(end)/2;
+kelvin = [kel_first kel_mid kel_end 1];
  
 mat = [mattot ; lastline; kelvin];    
 
@@ -143,9 +153,11 @@ gamans = inv(mat)*rhs';
 gamans_MAT(:,nx) = gamans;
 
 if nx == 1 
-    gam_dim = gamans(end);
+    gam_dim(nx) = gamans(end);
 else 
-   gam_dim = [gamans(end), gam_dim];
+   gam_notzero = nonzeros(gam_dim);
+   gam_zerolength = length(gam_notzero);
+   gam_dim = [gamans(end), gam_notzero', zeros(1,4001-(gam_zerolength+1))];
 end 
 
 psionsurface_cascade_vortex;

@@ -1,4 +1,4 @@
-
+clear xnew ynew thetpan thetpan1 A B D C E R T11 T2 Gd1 Gd2 f4 f3 xmidmat
 %h = 10;
 % get airfoil points to build the cascade
 %
@@ -6,11 +6,11 @@
 % NACA 4 digit series for now 
 
 
-t = .12;
+t = .01;
 % m = .02;
 % p = .4;
-m = .02;
-p = .4;
+m = .00;
+p = .0;
 
 %chi = -0*pi/180;
 
@@ -34,7 +34,7 @@ p = .4;
 %theta for break point  p = -cos(theven)/2 + .5
 
 %dth = 0.04
-xnums = 60;
+xnums = 80;
 
 thbreak = acos(-(p - .5)*2);
 
@@ -99,7 +99,7 @@ yaf = [fliplr(yl) yu(2:end)];
 yave = (yaf(end) - yaf(1))/2 + yaf(1);
 yaf(end) = yave;
 yaf(1) = yave;
-
+xaf(end) = xaf(1);
 % Add stagger if there is any
 %chi = -00*(pi/180);
 

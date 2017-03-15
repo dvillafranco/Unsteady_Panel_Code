@@ -1,13 +1,13 @@
+% Clear workspace 
 clear;
 close all
 
 
-% in order to run a compressible flow case 
-% set the right NACA or whatever in casc_justaf.m
+%% Set the free-stream parameters
 
-sos = 340;
-mach = 0;
-beta = sqrt(1 - mach^2);
+sos = 340;                      % Speed of Sound
+mach = 0;                       % Mach Number
+beta = sqrt(1 - mach^2);        % Beta - Compressibility Factor
 
 if (mach == 0.0) 
        vinf = 1.0;
@@ -16,33 +16,18 @@ else
     vinf = 1.0;
 end
 
-alp =0*pi/180;   % freestream angle of attack
+alp =0*pi/180;                  % Freestream angle of attack
 
-h = 30;  %spacing
-%chi = -20*pi/180;
-chi = -0*pi/180;
+h = 10;                         % Spacing in cascade
+chi = -0*pi/180;                % Stagger angle in cascade
 %chi = -13.6*pi/180
 
+%% Define Airfoil Points
+% Set Airfoil Properties in this code. 
+casc_justaf;
 
-% get the geometry and readjust the panel information
-
-
-
-casc_transform;
-
-
-% figure(41)
-% plot(xnew,ynew)
-% hold on;
-
-
-
- %ynew = ynew*beta;
-% 
-% plot(xnew,ynew,'r')
-
+% Airfoil Panel Angles 
 % Determine the panel angles used in Keuthe and Chow 
-
 for j = 1: length(xnew) -1;
     
         thetpan1(j) = atan2(ynew(j+1) - ynew(j), xnew(j+1) - xnew(j));
@@ -57,19 +42,41 @@ plot(thetpan*180/pi,'+')
 xmid = xnew(1:end-1)+ (xnew(2:end) - xnew(1:end-1))/2;
 ymid = ynew(1:end-1)+(ynew(2:end) - ynew(1:end-1))/2;
 
-SJ = sqrt( ( xnew(2:end) - xnew(1:end-1) ).^2 + (ynew(2:end)-ynew(1:end-1)).^2);
+SJ = sqrt( ( xnew(2:end) - xnew(1:end-1) ).^2 + (ynew(2:end)-...
+    ynew(1:end-1)).^2);
+
+%% Steady Solve
+% Solve for the gammas on the airfoil body - steady case
+find_gams_justaf_only;
+
+% Obtain potential on the surface and velocities on the surface
+psionsurface_original;
+
+%% Steady Convect
+% Determine the path of the imposed vortex and wake vorticies in the
+% airfoil plane and transform in to the cascade plane using conformal
+% transormation
+steady_convect_casc;
 
 
-% get the values of gamma on the panels
+
+%% Cascade Points
+% Set the same airfoil NACA #s here and following code will generate
+% cascade of said NACA airfoils with spacing h defined above
+casc_transform;
+
+%% Cascade Steady Solve
+% get the values of gamma on the panels for the cascade
 
 find_gams_casc_only;
 
-% find phi and psi on the surface
+% find phi and psi on the surface for the cascade
 
 find3_psionsurface;
 
-%find_gams_casc_vortex_shed;
-
+gam_dim = zeros(1,4001);
+find_gams_casc_vortex_shed;
+stop
 %compute lift in actual plane
 cp_comp = cpcasc/beta;
 yaf_comp = yaf/beta;

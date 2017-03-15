@@ -8,10 +8,11 @@
 % Boston University
 %
 %
-% This script will load the data from the unsteady panel code, and BEM
+% This script will load the data from the unsteady panel code cascade case,
+% the unsteady panel code single airfoil case and BEM single airfoil
 % code. It will develop the Sears functions along with the analytical
 % function for lift due to a passing vortex. The unsteady panel code data
-% and the BEM data will be process. This processing includes removing any
+% and the BEM data will be processed. This processing includes removing any
 % irregularities in the data which are attributed to the trailing edge
 % discretization of the airfoil. The FFT of both data sets will then be
 % taken to obtain spectral results for the data sets. From this, plots of
@@ -26,10 +27,9 @@ clear
 close all
 rho = 1;
 
-h = 0.02;
 %% Load the Panel Code Data
 %load L_unsteady_9x_heavymesh.mat
-load Panel_Unsteady_noconvect2.mat
+load cascade_h10.mat
 c = 1;
 %% Load the BEM Code data
 D1 = BEM2d_readbin('2NACA0001_long');
@@ -40,24 +40,26 @@ k_1 = 0.01:0.01:100;
 H0 = besselh(0,2,k_1);
 H1 = besselh(1,2,k_1);
 S = 2./(pi*k_1.*(H0-(1i*(H1))));
-
+h = 0.02;
 % Develop Lift scaled by \Gamma
 L_2 = rho*(c/2).*(-1i*S).*exp(-k_1*h);
 L_mag = abs(L_2);
 
 
+
 %% Process the Panel Code Data (Interpolation & FFT)
 % Calculate Phi Dot
-phi_dot_calc;
-time = 0.01:0.01:20;
+h = 10;
+phi_dot_casc;
+time = 0.01:0.01:40;
 % Interpolate the Signal 
-Lift_Panel_Interp;
-%Lift_Panel_Interp_4000steps;
+%Lift_Panel_Interp;
+Lift_Panel_Interp_4000steps;
 
 % Conduct FFT and store panel FFT results
-time_panel = 0.01:0.01:20;
+time_panel = 0.01:0.01:40;
 %time_panel = 0.005:0.005:20;
-foft = -L_unsteady_fix;
+foft = L_unsteady_fix;
 ffer3;
 close figure 1
 fer_Panel = fer2;
@@ -103,7 +105,7 @@ f_BEM = f;
 
 % Plot the lift curve
 figure(10)
-hp1 = plot(time_panel,-L_unsteady_fix);
+hp1 = plot(time_panel,L_unsteady_fix);
 hold on;
 hp2 = plot(time,D1.L);
 set(hp1,'LineWidth',2);
@@ -130,7 +132,7 @@ set(hp2,'LineWidth',1.5)
 
 % Plot the scaled lift values vs. reduced frequency
 figure(30)
-hp1 = semilogy(f_Panel*pi,abs(fer_Panel/vortstrength)./exp(-f_Panel*h*pi/1)*pi,'o');
+hp1 = semilogy(f_Panel*pi,abs(fer_Panel/vortstrength)./exp(-f_Panel*h*pi/1)*2*pi,'o');
 hold on;
 hp2 = semilogy(f_BEM*pi,abs(fer_BEM/vortstrength)./exp(-f_BEM*h*pi)*pi,'o');
 hp3 = semilogy(k_1,L_mag*2);
@@ -145,3 +147,22 @@ xlim([ 0 20]);
 leg3 = legend('Panel','BEM','Sears');
 
 
+%% Ventres Comparison
+
+% Set the Mach number
+mach = 0.01;
+h = 0.02;
+% Import relevant data
+filename = 'ventres_ksweep_h10.txt';
+A = importdata(filename);
+
+for i = 1:length(A)
+    k_ven(i) = A(i,1);
+    cl_ven(i) = A(i,2);
+   
+end
+cl_ven = cl_ven.*exp(-k_ven*h);
+figure(202)
+hp = semilogy(k_ven,cl_ven,'--');
+hold on;
+hp1 = semilogy(f_Panel*pi,abs(fer_Panel/vortstrength*2*pi))%.*exp(-f_Panel*h*pi/1)*2*pi);

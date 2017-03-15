@@ -1,2 +1,4 @@
 *.mat
 *.bin
+*.icloud
+*.DS_Store

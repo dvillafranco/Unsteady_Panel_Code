@@ -96,7 +96,7 @@ for j = length(SJ)
     integral(j) = (gamans(j) + gamans(j+1))*SJ(j)/2;
 end
 
-gamans_steady = sum(integral);
+gamans_steady_af = sum(integral);
 
 
 
