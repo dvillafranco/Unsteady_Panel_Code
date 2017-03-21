@@ -29,7 +29,7 @@ rho = 1;
 
 %% Load the Panel Code Data
 %load L_unsteady_9x_heavymesh.mat
-load cascade_h10.mat
+load Cascade_fp_h1_h06.mat
 c = 1;
 %% Load the BEM Code data
 D1 = BEM2d_readbin('2NACA0001_long');
@@ -49,7 +49,7 @@ L_mag = abs(L_2);
 
 %% Process the Panel Code Data (Interpolation & FFT)
 % Calculate Phi Dot
-h = 10;
+h = 1 ;
 phi_dot_casc;
 time = 0.01:0.01:40;
 % Interpolate the Signal 
@@ -88,7 +88,7 @@ time_good = D1.t(6:end);
 lift_good = D1.L(6:end);
 time_query = D1.t(1:5);
 
-L_ext = interp1(time_good,lift_good,time_query,'spline','extrap');
+L_ext = interp1(time_good,lift_good,time_query,'pchip','extrap');
 D1.L = [L_ext', lift_good];
 
 % Conduct FFT and store BEM FFT results
@@ -105,7 +105,7 @@ f_BEM = f;
 
 % Plot the lift curve
 figure(10)
-hp1 = plot(time_panel,L_unsteady_fix);
+hp1 = plot(time_panel,L_unsteady_fix,'d');
 hold on;
 hp2 = plot(time,D1.L);
 set(hp1,'LineWidth',2);
@@ -151,9 +151,9 @@ leg3 = legend('Panel','BEM','Sears');
 
 % Set the Mach number
 mach = 0.01;
-h = 0.02;
+h = 0.06;
 % Import relevant data
-filename = 'ventres_ksweep_h10.txt';
+filename = 'ventres_ksweep_h1.txt';
 A = importdata(filename);
 
 for i = 1:length(A)
@@ -161,8 +161,49 @@ for i = 1:length(A)
     cl_ven(i) = A(i,2);
    
 end
-cl_ven = cl_ven.*exp(-k_ven*h);
+cl_ven = cl_ven%.*exp(-k_ven*h);
 figure(202)
-hp = semilogy(k_ven,cl_ven,'--');
+hp = semilogy(k_ven,cl_ven);
 hold on;
-hp1 = semilogy(f_Panel*pi,abs(fer_Panel/vortstrength*2*pi))%.*exp(-f_Panel*h*pi/1)*2*pi);
+hp1 = semilogy(f_Panel*pi,abs(fer_Panel/vortstrength).*exp(-f_Panel*h*pi/1)*2*pi);
+xlabel('Reduced Frequency')
+ylabel('FFT of Lift Signal')
+set(gca,'FontSize',16);
+legend('Ventres','Panel - Cascade')
+title('Cascade Spacing h = 1');
+set(hp,'LineWidth',2);
+set(hp1,'LineWidth',0.5);
+xlim([0 30]);
+grid on;
+
+
+
+
+figure(1000)
+hp0 = plot(xnew,ynew);
+hold on;
+hp1 = plot(real(vort_imp_z2),imag(vort_imp_z2),'o');
+hp2 = plot(real(vort_wake_z2),imag(vort_wake_z2),'x');
+set(hp0,'LineWidth',2);
+set(hp1,'LineWidth',2);
+set(hp2,'LineWidth',2);
+set(gca,'FontSize',16);
+xlabel('X');
+ylabel('Y');
+title('Transformed Plane')
+
+figure(2000)
+hp3 = plot(real(vort_imp_z1),imag(vort_imp_z1),'o');
+hold on;
+hp4 = plot(real(vort_wake_z1),imag(vort_wake_z1),'x');
+hp5 = plot(xaf2,yaf2);
+set(hp3,'LineWidth',0.5);
+set(hp4,'LineWidth',2);
+set(hp5,'LineWidth',2);
+set(gca,'FontSize',16);
+grid on;
+xlabel('X')
+ylabel('Y')
+title('Real Plane')
+axis equal
+

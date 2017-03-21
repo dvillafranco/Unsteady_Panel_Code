@@ -34,7 +34,7 @@ p = .0;  % camber position
 %theta for break point  p = -cos(theven)/2 + .5
 
 %dth = 0.04
-xnums = 80;
+xnums = 120;
 
 
 thbreak = acos(-(p - .5)*2);
@@ -107,10 +107,9 @@ yaf = yaf/beta;
 xaf2 = xaf*cos(chi) - yaf*sin(chi) ;
 yaf2 = xaf*sin(chi) + yaf*cos(chi) ;
 
-figure(1)
-plot(xaf2,yaf2)
+
 %axis equal;
- hold on;
+
 % set spacing (based on chord = 1) and repeat to create cascade of foils
 
 
@@ -138,26 +137,29 @@ xnew = xaf2;
 ynew = yaf2;
 
 % set trailing edge point 
-% slope2 = (ynew(3) - ynew(2))/(xnew(3) - xnew(2));
-% slope3 = (ynew(end-1) - ynew(end-2))/(xnew(end-1) - xnew(end-2));
-% xnew(1) = (-ynew(2) + ynew(end-1) + xnew(2)*slope2 - xnew(end-1)*slope3)/ ...
-%    (slope2 - slope3);
-% ynew(1) = slope2 * (xnew(1) - xnew(2)) + ynew(2);
-% 
-% xnew(end) = xnew(1);
-% ynew(end) = ynew(1);
+slope2 = (ynew(3) - ynew(2))/(xnew(3) - xnew(2));
+slope3 = (ynew(end-1) - ynew(end-2))/(xnew(end-1) - xnew(end-2));
+xnew(1) = (-ynew(2) + ynew(end-1) + xnew(2)*slope2 - xnew(end-1)*slope3)/ ...
+   (slope2 - slope3);
+ynew(1) = slope2 * (xnew(1) - xnew(2)) + ynew(2);
+
+xnew(end) = xnew(1);
+ynew(end) = ynew(1);
 
 %this is a fudge here so that the asymp solver works - it needs airfoil
 %going from 0 to 2 even after it is rotated (I think ) 
-stretchfac = (max(xnew)-min(xnew))/1.0;
-xnew = xnew/stretchfac;
-ynew = ynew/stretchfac;
+% stretchfac = (max(xnew)-min(xnew))/1.0;
+% xnew = xnew/stretchfac;
+% ynew = ynew/stretchfac;
 
 
 % ynew(1) = 0;
 % ynew(end) = 0;
 % xnew(1) = .505;
 % xnew(end) = .505;
+
+figure(1)
+plot(xnew,ynew,'o')
 % Determine the panel angles used in Keuthe and Chow 
 
 for j = 1: length(xnew) -1;

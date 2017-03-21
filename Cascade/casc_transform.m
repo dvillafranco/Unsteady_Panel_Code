@@ -34,7 +34,7 @@ p = .0;
 %theta for break point  p = -cos(theven)/2 + .5
 
 %dth = 0.04
-xnums = 80;
+xnums = 100;
 
 thbreak = acos(-(p - .5)*2);
 
@@ -131,10 +131,22 @@ for j = 1:4
     plot(xaf2s, (yafs(j,:)));
    
 end
+xnew = xaf2;
+ynew = yaf2;
+
+% set trailing edge point 
+slope2 = (ynew(3) - ynew(2))/(xnew(3) - xnew(2));
+slope3 = (ynew(end-1) - ynew(end-2))/(xnew(end-1) - xnew(end-2));
+xnew(1) = (-ynew(2) + ynew(end-1) + xnew(2)*slope2 - xnew(end-1)*slope3)/ ...
+   (slope2 - slope3);
+ynew(1) = slope2 * (xnew(1) - xnew(2)) + ynew(2);
+
+xnew(end) = xnew(1);
+ynew(end) = ynew(1);
 set(gca,'FontSize',16)
 % Form the complex variable and do the transformation
 
-z1 = xaf2s + 1i*yaf2s;
+z1 = xnew + 1i*ynew;
 
 z2 = tanh(pi * z1/h);
 xnew = real(z2);

@@ -13,8 +13,7 @@ for gt = 1:4000;
     y_imp(gt+1) = y_imp(gt) + vpan*dt;
 end
 
-xaf2(end) = 0.5;
-x_fixed(1) = xaf2(end) +0.504*dt;
+x_fixed(1) = xnew(end) +0.45*dt;
 y_fixed(1) = 0;
 
 for gt = 1:4000;

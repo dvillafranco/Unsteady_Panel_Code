@@ -94,7 +94,7 @@ mat = [mattot ; lastline];
 gamans = inv(mat)*rhs'
 
 
-for j = length(SJ)
+for j = 1:length(SJ)
     integral(j) = (gamans(j) + gamans(j+1))*SJ(j)/2;
 end
 

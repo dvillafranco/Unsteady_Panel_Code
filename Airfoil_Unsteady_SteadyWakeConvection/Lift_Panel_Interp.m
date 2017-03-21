@@ -5,11 +5,11 @@ clear L_front L_back time_good lift_good time_query
 rho = 1;
 c = 1;
 h = 0.02;
-time = 0.001:0.001:20;
+time = 0.01:0.01:20;
 % Find the points to the left of the spike which are to be kept, and the
 % points to the right which are to be kept.
-before_dip      = 8568;    %400; 500    906
-after_dip       = 9550;   %530;  620   1061
+before_dip      = 946;    %400; 500    906
+after_dip       = 1013;   %530;  620   1061
  
 % % Set up the points for interpolation algorithm
 L_front = L_unsteady(1:before_dip);
@@ -21,35 +21,35 @@ time_query = time(before_dip+1:after_dip-1);
 % Interpolate points
 L_int = interp1(time_good, lift_good, time_query,'pchip');
 L_unsteady_fix = [L_front, L_int,L_back];
-
-before_dip = 1036
-after_dip = 1079
-
-% Set up the points for interpolation algorithm
-L_front = L_unsteady_fix(1:before_dip);
-L_back  = L_unsteady_fix(after_dip:end);
-time_good = [time(1:before_dip) , time(after_dip:end)];
-lift_good = [L_front, L_back]; 
-time_query = time(before_dip+1:after_dip-1);
-
-% Interpolate points
-L_int = interp1(time_good, lift_good, time_query,'pchip');
-L_unsteady_fix = [L_front, L_int,L_back];
-
-% Interpolate 3
-before_dip = 1339
-after_dip = 1365
-
-% Set up the points for interpolation algorithm
-L_front = L_unsteady_fix(1:before_dip);
-L_back  = L_unsteady_fix(after_dip:end);
-time_good = [time(1:before_dip) , time(after_dip:end)];
-lift_good = [L_front, L_back]; 
-time_query = time(before_dip+1:after_dip-1);
-
-% Interpolate points
-L_int = interp1(time_good, lift_good, time_query,'pchip');
-L_unsteady_fix = [L_front, L_int,L_back];
+% 
+% before_dip = 1036
+% after_dip = 1079
+% 
+% % Set up the points for interpolation algorithm
+% L_front = L_unsteady_fix(1:before_dip);
+% L_back  = L_unsteady_fix(after_dip:end);
+% time_good = [time(1:before_dip) , time(after_dip:end)];
+% lift_good = [L_front, L_back]; 
+% time_query = time(before_dip+1:after_dip-1);
+% 
+% % Interpolate points
+% L_int = interp1(time_good, lift_good, time_query,'pchip');
+% L_unsteady_fix = [L_front, L_int,L_back];
+% 
+% % Interpolate 3
+% before_dip = 1339
+% after_dip = 1365
+% 
+% % Set up the points for interpolation algorithm
+% L_front = L_unsteady_fix(1:before_dip);
+% L_back  = L_unsteady_fix(after_dip:end);
+% time_good = [time(1:before_dip) , time(after_dip:end)];
+% lift_good = [L_front, L_back]; 
+% time_query = time(before_dip+1:after_dip-1);
+% 
+% % Interpolate points
+% L_int = interp1(time_good, lift_good, time_query,'pchip');
+% L_unsteady_fix = [L_front, L_int,L_back];
 
 % Extrapolate at the beginning
 time_good = time(21:end);

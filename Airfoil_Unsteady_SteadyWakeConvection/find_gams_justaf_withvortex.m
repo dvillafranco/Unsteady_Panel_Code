@@ -1,7 +1,7 @@
 % find_gams_justaf_only_withvortex
 ntz=1;
 y_fixed(1) = 0;
-for nx = 1:4000
+for nx = 1:2000
 % set up matrix to find unknown gamma values 
 % use casc_tranform.m to get the endpoints, midpoints, and panel angles and
 %   h which is the cascade gap    
@@ -165,7 +165,7 @@ else
 %    else
      gam_notzero = nonzeros(gam_dim);
      gam_zerolength = length(gam_notzero);
-     gam_dim = [gamans(end), gam_notzero', zeros(1,4001-(gam_zerolength+1))];
+     gam_dim = [gamans(end), gam_notzero', zeros(1,2001-(gam_zerolength+1))];
 %    end
 end 
 

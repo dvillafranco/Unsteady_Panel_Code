@@ -29,7 +29,7 @@ rho = 1;
 h = 0.02;
 %% Load the Panel Code Data
 %load L_unsteady_9x_heavymesh.mat
-load Panel_Unsteady_noconvect2.mat
+load Panel_Unsteady_closewake.mat
 c = 1;
 %% Load the BEM Code data
 D1 = BEM2d_readbin('2NACA0001_long');
@@ -50,6 +50,7 @@ L_mag = abs(L_2);
 % Calculate Phi Dot
 phi_dot_calc;
 time = 0.01:0.01:20;
+
 % Interpolate the Signal 
 Lift_Panel_Interp;
 %Lift_Panel_Interp_4000steps;
@@ -57,7 +58,11 @@ Lift_Panel_Interp;
 % Conduct FFT and store panel FFT results
 time_panel = 0.01:0.01:20;
 %time_panel = 0.005:0.005:20;
-foft = -L_unsteady_fix;
+%L_unsteady_fix = -L_unsteady;
+time = -9.00:0.01:10.99;
+hanning = hann(length(L_unsteady_fix));
+L_unsteady_hann = L_unsteady_fix.*hanning'*1.0813;
+foft = -(L_unsteady_hann);
 ffer3;
 close figure 1
 fer_Panel = fer2;
@@ -103,7 +108,7 @@ f_BEM = f;
 
 % Plot the lift curve
 figure(10)
-hp1 = plot(time_panel,-L_unsteady_fix);
+hp1 = plot(time_panel,L_unsteady_fix);
 hold on;
 hp2 = plot(time,D1.L);
 set(hp1,'LineWidth',2);
@@ -130,9 +135,9 @@ set(hp2,'LineWidth',1.5)
 
 % Plot the scaled lift values vs. reduced frequency
 figure(30)
-hp1 = semilogy(f_Panel*pi,abs(fer_Panel/vortstrength)./exp(-f_Panel*h*pi/1)*pi,'o');
+hp1 = semilogy(f_Panel*pi,abs(fer_Panel/vortstrength)./exp(-f_Panel*h*pi/1)*pi);
 hold on;
-hp2 = semilogy(f_BEM*pi,abs(fer_BEM/vortstrength)./exp(-f_BEM*h*pi)*pi,'o');
+hp2 = semilogy(f_BEM*pi,abs(fer_BEM/vortstrength)./exp(-f_BEM*h*pi)*pi);
 hp3 = semilogy(k_1,L_mag*2);
 set(hp1,'LineWidth',1.5);
 set(hp2,'LineWidth',1.5);

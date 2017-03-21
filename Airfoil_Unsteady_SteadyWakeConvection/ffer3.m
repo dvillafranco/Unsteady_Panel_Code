@@ -12,7 +12,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clear f fer2
 vortstrength=-0.02;
-izeropad = 1.0;
+izeropad = 1;
 
 
 %D = BEM2d_readbin('2example');

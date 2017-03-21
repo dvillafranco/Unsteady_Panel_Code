@@ -115,8 +115,8 @@ end
    V_end = Vx/2;
    
 % Say spacing in time dt = 0.1 for now, vortex will be sheded at 
-dt = 0.005;
-x_fixed(1) = xnew(end) +0.504*dt;
+% dt = 0.01;
+% x_fixed(1) = xnew(end) +0.504*dt;
 %x_fixed(1) = 0.55;
 %x_fixed(1) = 0.5+ xl(end) - xl(end-1);    
     

@@ -92,7 +92,7 @@ gamans = inv(mat)*rhs';
 %gamans_steady = sum(gamans);
 
 
-for j = length(SJ)
+for j = 1:length(SJ)
     integral(j) = (gamans(j) + gamans(j+1))*SJ(j)/2;
 end
 

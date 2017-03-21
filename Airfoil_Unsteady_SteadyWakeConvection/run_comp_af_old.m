@@ -63,7 +63,7 @@ find_gams_justaf_only;
 
 psionsurface_original;
 steady_convect;
-gam_dim = zeros(1,4001);
+gam_dim = zeros(1,2001);
 find_gams_justaf_withvortex;
 
 
