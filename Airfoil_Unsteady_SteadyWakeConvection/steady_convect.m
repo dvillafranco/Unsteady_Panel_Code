@@ -2,7 +2,7 @@
 dt = 0.01;
 
 x_imp(1) = -9.0;
-y_imp(1) = 0.02;
+y_imp(1) = 0.04;
 
 
 for gt = 1:2000;
@@ -10,10 +10,10 @@ for gt = 1:2000;
     yp = y_imp(gt);
     psiinfield_vort_wake;
     x_imp(gt+1) = x_imp(gt) + upan*dt;
-    y_imp(gt+1) = y_imp(gt) + vpan*dt;
+    y_imp(gt+1) = y_imp(gt) + abs(vpan)*dt;
 end
 
-x_fixed(1) = xnew(end) +0.125*dt;
+x_fixed(1) = xnew(end) +0.115*dt;
 y_fixed(1) = 0;
 
 for gt = 1:2000;

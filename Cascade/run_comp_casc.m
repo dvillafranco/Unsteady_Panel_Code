@@ -18,7 +18,7 @@ end
 
 alp =0*pi/180;                  % Freestream angle of attack
 
-h = 1;                         % Spacing in cascade
+h = 0.5;                         % Spacing in cascade
 chi = -0*pi/180;                % Stagger angle in cascade
 %chi = -13.6*pi/180
 

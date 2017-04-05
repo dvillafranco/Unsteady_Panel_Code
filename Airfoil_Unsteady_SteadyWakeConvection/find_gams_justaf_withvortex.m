@@ -9,7 +9,7 @@ for nx = 1:2000
 % Define Parameters for the Vortex
 gam_imp = 0.02;
 x_imp(1) = -9.0;
-y_imp(1) = 0.02;
+y_imp(1) = 0.04;
 
 % Define Parameters for Shed Vorted
 %x_fixed = 0.6;

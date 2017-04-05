@@ -27,7 +27,8 @@ chi = -0*pi/180;
 
 % get the geometry and readjust the panel information
 philocnew_store = zeros(120,800);
-casc_justaf;
+%casc_justaf;
+casc_af_mixed;
 %airfoil_disc;
 figure(41)
 plot(xnew,ynew,'x')

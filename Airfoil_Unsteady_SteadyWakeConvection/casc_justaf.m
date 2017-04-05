@@ -54,6 +54,7 @@ tha = [thbreak + dthaft : dthaft : pi];
 xf = -cos(thf)/2 + .5;
 xa = -cos(tha)/2 + .5;
 x = [xf xa];
+stop
 numb = length(x);
 
 yt = t/.2*(.2969*sqrt(x) - .126*x - .35160*x.^2 + .28430*x.^3 - .1015*x.^4);
